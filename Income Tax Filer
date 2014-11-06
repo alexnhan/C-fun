@@ -1,0 +1,206 @@
+/**********************************************************
+Program: incomeTaxFiler.cpp
+Programmer: Alexander Nhan (an497@drexel.edu)
+Last Modified: 11/2/2014
+Purpose: This program asks the user to enter a file name 
+that contains the tax payers' data which contains SSN, 
+filing status, and the taxable income.  The program will
+then calculate the income tax, print it to the console, and 
+create an output file with the person SSN, filing status, 
+the taxable income, and the income tax.  If the input file
+does not exist, the program will display an error message.
+***********************************************************/
+
+// Headers
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <string>
+using namespace std;
+
+// Main program
+int main()
+{
+	// Asking user for input file name
+	cout << "Please enter tax payers' data file name: ";
+	string fileName;
+	cin >> fileName;
+
+	// Attempt to open file for reading
+	ifstream fin(fileName.c_str());
+	if (fin.fail())
+	{
+		cout << "This file does not exist. Good bye." << endl;
+		return 1;
+	}
+
+	// Preparing console for output
+	cout << setprecision(2) << fixed;
+	cout << endl << setw(7) << right << "SSN" << setw(20) << right << "Filing Status" << setw(20) << right << "Taxable Income($)" << setw(16) << right << "Income Tax($)" << endl;
+
+	// Preparing output file for output
+	ofstream fout("tax_payers_income_tax.txt");
+	fout << setprecision(2) << fixed;
+	fout << setw(7) << right << "SSN" << setw(20) << right << "Filing Status" << setw(20) << right << "Taxable Income($)" << setw(16) << right << "Income Tax($)" << endl;
+
+	// Extracting SSN, filing status, and taxable income information from input file.  Then calculating income tax and outputting
+	string data;
+	string SSN;
+	char filingStatus;
+	double taxableIncome;
+	double incomeTax;
+	while (!fin.eof())
+	{
+		getline(fin, data, '\n');
+		int firstBlank;
+		firstBlank = data.find(' ', 0);
+		SSN = data.substr(0, firstBlank);
+		int secondBlank;
+		secondBlank = data.find(' ', firstBlank + 1);
+		int filingStatusLocation = secondBlank - 1;
+		filingStatus = data[filingStatusLocation];
+		int dollarSignLocation = data.find('$', 0);
+		int dataLength = data.length();
+		string income = data.substr(dollarSignLocation + 1, dataLength - dollarSignLocation);
+		taxableIncome = stod(income);
+
+		// Calculating income tax
+		if (filingStatus == 'S') // filing status is Single
+		{
+			if (taxableIncome <= 8925)
+			{
+				incomeTax = taxableIncome*0.1; // 10% marginal rate
+			}
+			else if (taxableIncome > 8925 && taxableIncome <= 36250)
+			{
+				incomeTax = (8925 * 0.1) + ((taxableIncome - 8925)*0.15); // up to 15% marginal rate
+			}
+			else if (taxableIncome > 36250 && taxableIncome <= 87850)
+			{
+				incomeTax = (8925 * 0.1) + ((36250 - 8925)*0.15) + ((taxableIncome - 36250)*0.25); // up to 25% marginal rate
+			}
+			else if (taxableIncome > 87850 && taxableIncome <= 183250)
+			{
+				incomeTax = (8925 * 0.1) + ((36250 - 8925)*0.15) + ((87850 - 36250)*0.25) + ((taxableIncome - 87850)*0.28); // up to 28% marginal rate
+			}
+			else if (taxableIncome > 183250 && taxableIncome <= 398350)
+			{
+				incomeTax = (8925 * 0.1) + ((36250 - 8925)*0.15) + ((87850 - 36250)*0.25) + ((183250 - 87850)*0.28) + ((taxableIncome - 183250)*0.33); // up to 33% marginal rate
+			}
+			else if (taxableIncome > 398350 && taxableIncome <= 400000)
+			{
+				incomeTax = (8925 * 0.1) + ((36250 - 8925)*0.15) + ((87850 - 36250)*0.25) + ((183250 - 87850)*0.28) + ((398350 - 183250)*0.33) + ((taxableIncome - 398350)*0.35); // up to 35% marginal rate
+			}
+			else
+			{
+				incomeTax = (8925 * 0.1) + ((36250 - 8925)*0.15) + ((87850 - 36250)*0.25) + ((183250 - 87850)*0.28) + ((398350 - 183250)*0.33) + ((400000 - 398350)*0.35) + ((taxableIncome - 400000)*0.396); // up to 39.6% marginal rate
+			}
+		}
+		else if (filingStatus == 'J') // filing status is Married filing jointly
+		{
+			if (taxableIncome <= 17850)
+			{
+				incomeTax = taxableIncome*0.1; // 10% marginal rate
+			}
+			else if (taxableIncome > 17850 && taxableIncome <= 72500)
+			{
+				incomeTax = (17850 * 0.1) + ((taxableIncome - 17850)*0.15); // up to 15% marginal rate
+			}
+			else if (taxableIncome > 72500 && taxableIncome <= 146400)
+			{
+				incomeTax = (17850 * 0.1) + ((72500 - 17850)*0.15) + ((taxableIncome - 72500)*0.25); // up to 25% marginal rate
+			}
+			else if (taxableIncome > 146400 && taxableIncome <= 223050)
+			{
+				incomeTax = (17850 * 0.1) + ((72500 - 17850)*0.15) + ((146400 - 72500)*0.25) + ((taxableIncome - 146400)*0.28); // up to 28% marginal rate
+			}
+			else if (taxableIncome > 223050 && taxableIncome <= 398350)
+			{
+				incomeTax = (17850 * 0.1) + ((72500 - 17850)*0.15) + ((146400 - 72500)*0.25) + ((223050 - 146400)*0.28) + ((taxableIncome - 223050)*0.33); // up to 33% marginal rate
+			}
+			else if (taxableIncome > 398350 && taxableIncome <= 450000)
+			{
+				incomeTax = (17850 * 0.1) + ((72500 - 17850)*0.15) + ((146400 - 72500)*0.25) + ((223050 - 146400)*0.28) + ((398350 - 223050)*0.33) + ((taxableIncome - 398350)*0.35); // up to 35% marginal rate
+			}
+			else
+			{
+				incomeTax = (17850 * 0.1) + ((72500 - 17850)*0.15) + ((146400 - 72500)*0.25) + ((223050 - 146400)*0.28) + ((398350 - 223050)*0.33) + ((450000 - 398350)*0.35) + ((taxableIncome - 450000)*0.396); // up to 39.6% marginal rate
+			}
+		}
+		else if (filingStatus == 'H') // filing status is Head of Household
+		{
+			if (taxableIncome <= 12750)
+			{
+				incomeTax = taxableIncome*0.1; // 10% marginal rate
+			}
+			else if (taxableIncome > 12750 && taxableIncome <= 48600)
+			{
+				incomeTax = (12750 * 0.1) + ((taxableIncome - 12750)*0.15); // up to 15% marginal rate
+			}
+			else if (taxableIncome > 48600 && taxableIncome <= 125450)
+			{
+				incomeTax = (12750 * 0.1) + ((48600 - 12750)*0.15) + ((taxableIncome - 48600)*0.25); // up to 25% marginal rate
+			}
+			else if (taxableIncome > 125450 && taxableIncome <= 203150)
+			{
+				incomeTax = (12750 * 0.1) + ((48600 - 12750)*0.15) + ((125450 - 48600)*0.25) + ((taxableIncome - 125450)*0.28); // up to 28% marginal rate
+			}
+			else if (taxableIncome > 203150 && taxableIncome <= 398350)
+			{
+				incomeTax = (12750 * 0.1) + ((48600 - 12750)*0.15) + ((125450 - 48600)*0.25) + ((203150 - 125450)*0.28) + ((taxableIncome - 203150)*0.33); // up to 33% marginal rate
+			}
+			else if (taxableIncome > 398350 && taxableIncome <= 425000)
+			{
+				incomeTax = (12750 * 0.1) + ((48600 - 12750)*0.15) + ((125450 - 48600)*0.25) + ((203150 - 125450)*0.28) + ((398350 - 203150)*0.33) + ((taxableIncome - 398350)*0.35); // up to 35% marginal rate
+			}
+			else
+			{
+				incomeTax = (12750 * 0.1) + ((48600 - 12750)*0.15) + ((125450 - 48600)*0.25) + ((203150 - 125450)*0.28) + ((398350 - 203150)*0.33) + ((450000 - 398350)*0.35) + ((taxableIncome - 425000)*0.396); // up to 39.6% marginal rate
+			}
+		}
+		else if (filingStatus == 'I') // Filing status is Married filing separately
+		{
+			if (taxableIncome <= 8925)
+			{
+				incomeTax = taxableIncome*0.1; // 10% marginal rate
+			}
+			else if (taxableIncome > 8925 && taxableIncome <= 36250)
+			{
+				incomeTax = (8925 * 0.1) + ((taxableIncome - 8925)*0.15); // up to 15% marginal rate
+			}
+			else if (taxableIncome > 36250 && taxableIncome <= 73200)
+			{
+				incomeTax = (8925 * 0.1) + ((36250 - 8925)*0.15) + ((taxableIncome - 36250)*0.25); // up to 25% marginal rate
+			}
+			else if (taxableIncome > 73200 && taxableIncome <= 111525)
+			{
+				incomeTax = (8925 * 0.1) + ((36250 - 8925)*0.15) + ((73200 - 36250)*0.25) + ((taxableIncome - 73200)*0.28); // up to 28% marginal rate
+			}
+			else if (taxableIncome > 111525 && taxableIncome <= 199175)
+			{
+				incomeTax = (8925 * 0.1) + ((36250 - 8925)*0.15) + ((73200 - 36250)*0.25) + ((111525 - 73200)*0.28) + ((taxableIncome - 111525)*0.33); // up to 33% marginal rate
+			}
+			else if (taxableIncome > 199175 && taxableIncome <= 225000)
+			{
+				incomeTax = (8925 * 0.1) + ((36250 - 8925)*0.15) + ((73200 - 36250)*0.25) + ((111525 - 73200)*0.28) + ((199175 - 111525)*0.33) + ((taxableIncome - 199175)*0.35); // up to 35% marginal rate
+			}
+			else
+			{
+				incomeTax = (8925 * 0.1) + ((36250 - 8925)*0.15) + ((73200 - 36250)*0.25) + ((111525 - 73200)*0.28) + ((199175 - 111525)*0.33) + ((225000 - 199175)*0.35) + ((taxableIncome - 225000)*0.396); // up to 39.6% marginal rate
+			}
+		}
+
+		// Displaying SSN, filing status, taxable income, and income tax to console
+		cout << SSN << setw(10) << right << filingStatus << setw(21) << right << taxableIncome << setw(18) << right << incomeTax << endl;
+
+		// Displaying SSN, filing status, taxable income, and income tax to output file
+		fout << SSN << setw(10) << right << filingStatus << setw(21) << right << taxableIncome << setw(18) << right << incomeTax << endl;
+	}
+
+	// Closing input and output files
+	fin.close();
+	fout.close();
+
+	// Ending program
+	return 0;
+}
