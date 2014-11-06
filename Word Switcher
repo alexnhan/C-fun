@@ -1,0 +1,41 @@
+/**********************************************************
+Program: wordSwitcherExtraCredit.cpp
+Programmer: Alexander Nhan (an497@drexel.edu)
+Last Modified: 10/19/2014
+Purpose: This program asks the user to enter a word, and a
+sub-word contained in the entered word.  The program will
+then rotate the word around the sub-word and display it
+as the output.  For example, if the entered word is
+'coursework', and the sub-word is 'sew', then the output will be
+'orksewcour'.
+***********************************************************/
+
+// Headers
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Main program
+int main()
+{
+	// Asking user for a word and sub-word
+	cout << "Enter a word (single word only, no spaces): ";
+	string word;
+	cin >> word;
+	cout << "Enter a sub-word contained within the word: ";
+	string subWord;
+	cin >> subWord;
+
+	// Breaking the word into parts in order to swap them
+	int subWordLocation = word.find(subWord, 0);
+	string beginningString = word.substr(0, subWordLocation);
+	int subWordLength = subWord.length();
+	int wordLength = word.length();
+	string endingString = word.substr(subWordLocation + subWordLength, (wordLength - subWordLocation - subWordLength));
+
+	// Displaying output
+	cout << endl << "The rotated word is: " << endingString << subWord << beginningString << endl;
+
+	// Ending program
+	return 0;
+}
