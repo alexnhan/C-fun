@@ -1,0 +1,151 @@
+/**********************************************************
+Program: complexNumbers.cpp
+Programmer: Alexander Nhan (an497@drexel.edu)
+Last Modified: 11/19/2014
+Purpose: This program lets the user perform arithmetic 
+operations on complex numbers, where i is the "imaginary 
+unit" defined by sqrt(-1).  The user will be allowed to 
+select an operation from the menu ( +, -, *, / ).  Then, 
+the user is asked to input non-zero integers a0, b0, a1, b1.
+The wanted arithmetic should take the form:
+((a0 + b0*i) (+,-,*,/) (a1 + b1*i)), where the user chooses
++, -, *, or /. The program then performs the calculations 
+and prints the result to the console window, and then request 
+input again from the menu where the user also has the option
+to quit the program.
+***********************************************************/
+
+// Headers
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+#include <string>
+using namespace std;
+
+// Functions
+char informs();
+/*
+	Informs the user of the program's purpose, explains how to enter data, and allows the user to select the operation or terminate the program. Returns the char of the operation.
+*/
+
+void complexAdd(int a0, int b0, int a1, int b1, int & a, int & b);
+/*
+	Takes as input four integers representing the two complex numbers (a0, b0, a1, b1), adds the two complex numbers, and returns the two values of the result (a, b)
+	@param a0, b0, a1, b1 - user inputs
+	@param a, b - return output values passed by reference
+*/
+
+void complexSubtract(int a0, int b0, int a1, int b1, int & a, int & b);
+/*
+	Takes as input four integers representing the two complex numbers, subtracts the two complex numbers, and returns the two values of the result.
+	@param a0, b0, a1, b1 - user inputs
+	@param a, b - return output values passed by reference
+*/
+
+void complexMultiply(int a0, int b0, int a1, int b1, int & a, int & b);
+/*
+	Takes as input four integers representing the two complex numbers, multiplies the two complex numbers, and returns the two values of the result.
+	@param a0, b0, a1, b1 - user inputs
+	@param a, b - return output values passed by reference
+*/
+
+void complexDivide(int a0, int b0, int a1, int b1, int & a, int & b);
+/*
+	That takes as input four integers representing the two complex numbers, divides the two complex numbers, and returns the two values of the result. Integer division is performed in this function.
+	@param a0, b0, a1, b1 - user inputs
+	@param a, b - return output values passed by reference
+*/
+
+// Main program
+int main()
+{
+	// Initializing variables needed in main and functions
+	char symbol;
+	int a0, b0, a1, b1;
+	int a = 0;
+	int b = 0;
+
+	// Starting the program by informing, and getting operation or terminating program
+	symbol = informs();
+	while (symbol != 0)
+	{
+		// Getting user input for a0, b0, a1, and b1
+		cout << "Enter non-zero integers for a0, b0, a1, and b1 (all separated by spaces): ";
+		cin >> a0 >> b0 >> a1 >> b1;
+
+		// Determining which operation the user wants to perform and then performing it
+		switch (symbol) {
+		case '+':
+			complexAdd(a0, b0, a1, b1, a, b);
+			cout << endl << "Answer: " << a << " + " << b << "i" << endl;
+			break;
+		case '-':
+			complexSubtract(a0, b0, a1, b1, a, b);
+			cout << endl << "Answer: " << a << " + " << b << "i" << endl;
+			break;
+		case '*':
+			complexMultiply(a0, b0, a1, b1, a, b);
+			cout << endl << "Answer: " << a << " + " << b << "i" << endl;
+			break;
+		case '/':
+			complexDivide(a0, b0, a1, b1, a, b);
+			cout << endl << "Answer: " << a << " + " << b << "i" << endl;
+			break;
+		}
+		cout << endl;
+		symbol = informs();
+	}
+
+	// Ending program when the input is either q or Q
+	return 0;
+
+}
+
+// Function definitions
+char informs()
+{
+	cout << "This program performs aritmetic operations on complex numbers." << endl <<
+		"These operations include addition, subtraction, multiplication, and division." << endl <<
+		"For example the sum of two complex numbers is ((a0 + b0*i) + (a1 + b1*i)). Use this as a template for picking a0, b0, a1, and b1." << endl <<
+		"The user is able to pick which operation to perform by inputting the symbols:" << endl <<
+		"+ for addition, - for subtraction, * for multiplication, and / for division." << endl <<
+		"Then, the user is able to input non-zero integers for a0, b0, a1, and b1 all in one line with spaces between numbers." << endl <<
+		"All inputs will be entered in the console window.  All outputs will also be displayed on the console window." << endl << 
+		"Enter q or Q to quit the program.  This menu will appear again after the calculation." << endl << endl;
+	char symbol;
+	cout << "Enter an operation to perform (+, -, *, /, q or Q): ";
+	cin >> symbol;
+	if (symbol == 'q' || symbol == 'Q')
+		return 0;
+	else if (symbol != '+' && symbol != '-' && symbol != '*' && symbol != '/')
+	{
+		cout << "Invalid symbol." << endl;
+		symbol = informs();
+	}
+	else
+		return symbol;
+}
+
+void complexAdd(int a0, int b0, int a1, int b1, int & a, int & b)
+{
+	a = a0 + a1;
+	b = b0 + b1;
+}
+
+void complexSubtract(int a0, int b0, int a1, int b1, int & a, int & b)
+{
+	a = a0 - a1;
+	b = b0 - b1;
+}
+
+void complexMultiply(int a0, int b0, int a1, int b1, int & a, int & b)
+{
+	a = ((a0*a1) - (b0*b1));
+	b = ((a0*b1) + (a1*b0));
+}
+
+void complexDivide(int a0, int b0, int a1, int b1, int & a, int & b)
+{
+	a = ((a0*a1) + (b0*b1)) / ((a1*a1) + (b1*b1));
+	b = ((a1*b0) - (a0*b1)) / ((a1*a1) + (b1*b1));
+}
