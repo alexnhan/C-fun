@@ -1,0 +1,114 @@
+/**********************************************************
+Program: complexNumbers.cpp
+Programmer: Alexander Nhan (an497@drexel.edu)
+Last Modified: 11/22/2014
+Purpose: This program allows the user to convert a roman
+number to its decimal representation.  The program consists
+of a function that yields a numeric value for each letter,
+and a function that converts the roman number string and
+returns its value.  For example, if the user inputs:
+MCMLXXVIII, the program will return: 1978.
+Error: this program can be taken advantage of by inputting
+more than 3 repeated values of the same Roman number, such as
+IIII, which will return 4.  Also the Roman numbers can be 
+inputted in wrong order and the program will still return 
+a value, such as VXI, which will return 6, instead of
+outputting an error.  However if the program is used
+correctly, with correct Roman number format, all answers
+will be correct to the numeric value of 4,999.
+***********************************************************/
+
+// Headers
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Functions
+int numericValue(char letter);
+/*
+	Yields the numeric value of each of the letters
+	@param letter - the single roman number character
+*/
+
+int convertRomanString(string romanNumber);
+/*
+	Converts the Roman number string and returns its value
+	@param romanNumber - the user inputted Roman number
+*/
+
+// Main program
+int main()
+{
+	// Initializing needed variables
+	int convertedValue;
+
+	// Prompting user and verifying correct characters are inputted
+	string romanNumber;
+	cout << "Input a Roman number: ";
+	cin >> romanNumber;
+
+	for (int i = 0; i < romanNumber.length(); i++)
+	{
+		if ((romanNumber[i] != 'M') && (romanNumber[i] != 'C') && (romanNumber[i] != 'L') && (romanNumber[i] != 'X') && (romanNumber[i] != 'V') && (romanNumber[i] != 'I'))
+		{
+			cout << endl << "You have inputted an invalid Roman number. Good bye." << endl << endl;
+			return 1;
+		}
+	}
+
+	// Numeric value of each letter
+	convertedValue = convertRomanString(romanNumber);
+
+	// Outputting converted value
+	cout << endl << "Converted value: " << convertedValue << endl << endl;
+	// Ending program
+	return 0;
+}
+
+// Function definitions
+int numericValue(char letter)
+{
+	if (letter == 'M')
+		return 1000;
+	else if (letter == 'C')
+		return 100;
+	else if (letter == 'L')
+		return 50;
+	else if (letter == 'X')
+		return 10;
+	else if (letter == 'V')
+		return 5;
+	else if (letter == 'I')
+		return 1;
+}
+
+int convertRomanString(string romanNumber)
+{
+	if (romanNumber.empty()) // If the string is empty return 0
+		return 0;
+	int i = 0;
+	int romanLength = romanNumber.length();
+	int firstValue = numericValue(romanNumber[i]);
+	if (romanLength == 1) // If there is only one nuber in the string, return that number to avoid errors
+		return firstValue;
+	int secondValue = numericValue(romanNumber[i + 1]);
+	int thirdValue = numericValue(romanNumber[i + 2]);
+
+	if (firstValue >= secondValue && secondValue >= thirdValue) // Used for values like: XVI
+	{
+		romanNumber.erase(i, 1);
+		romanNumber.erase(i, 1);
+		return firstValue + secondValue + convertRomanString(romanNumber); // Recursion
+	}
+	else if (firstValue >= secondValue && secondValue < thirdValue) // Used for values like: XIV
+	{
+		romanNumber.erase(i, 1);
+		return firstValue + convertRomanString(romanNumber); // Recursion
+	}
+	else if (firstValue < secondValue) // Used for values like: IV
+	{
+		romanNumber.erase(i, 1);
+		romanNumber.erase(i, 1);
+		return secondValue - firstValue + convertRomanString(romanNumber); // Recursion
+	}
+}
