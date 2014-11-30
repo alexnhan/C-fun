@@ -1,0 +1,89 @@
+/**********************************************************
+Program: computerGuesses.cpp
+Programmer: Alexander Nhan (an497@drexel.edu)
+Last Modified: 12/5/2014
+Purpose: This program will prompt the user to enter a number
+between 1 and 100.  Then the program will try to guess the
+user's value, and the user will tell the computer whether
+its guess is higher or lower than the user's chosen value
+(the user shouldn't lie about this). The program halts when 
+the computer player guesses the number the user chosen or 
+after the computer player has guessed unsuccessfully 10 times.
+***********************************************************/
+
+// Headers
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Function headers
+int guessNumber(int number, int computerGuess);
+/*
+	PURPOSE: The computer's guess to the user's value.  This program will employ an algorithm to guessing the user's value.
+	
+	@param number - user's inputted value 
+	@param computerGuess - computer's initial guess at the value, this value will be 50.
+*/
+
+// Main program
+int main()
+{
+	// Prompting user to enter a number between 1 and 100
+	int number;
+	cout << "Enter an integer between 1 and 100: ";
+	cin >> number;
+
+	// Computer's guess at the user's value
+	int computerGuess = 50; // Computer's first guess
+	int check = guessNumber(number, computerGuess);
+
+	// Ending program
+	if (check == 0)
+		return 0;
+}
+
+// Function descriptions
+int guessNumber(int number, int computerGuess)
+{
+	int increment = computerGuess; // For changing the computer's guess
+	int numberOfGuesses = 1; // For keeping track of the number of times the computer has guessed
+	string verification;
+	while (numberOfGuesses < 10)
+	{
+		if (computerGuess == number)
+		{
+			cout << "The computer player guesses " << computerGuess << ", and it is equal to your number!" << endl 
+				<< endl << "It took the computer " << numberOfGuesses << " tries!" << endl << endl;
+			return 0;
+		}
+		else
+		{
+			cout << "Was " << computerGuess << " higher or lower than the number you entered? (type higher or lower): ";
+			cin >> verification;
+			if (verification == "higher")
+			{
+				increment = increment / 2; // Halving the increment value before new computer guess
+				if (increment <= 1) // When the increment value is so small
+					computerGuess--;
+				else
+					computerGuess = computerGuess - ceil(increment);
+				numberOfGuesses++;
+			}
+			else if (verification == "lower")
+			{
+				increment = increment / 2; // Halving the increment value before new computer guess
+				if (increment <= 1) // When the increment value is so small
+					computerGuess++;
+				else
+					computerGuess = computerGuess + ceil(increment);
+				numberOfGuesses++;
+			}
+		}
+	}
+	if (numberOfGuesses >= 10)
+	{
+		cout << "The computer's last guess is " << computerGuess << ", and it is not equal to your number." << endl;
+		cout << endl << "The computer has reached the maximum number of tries, and for that reason it's out." << endl << endl;
+		return 0;
+	}
+}
