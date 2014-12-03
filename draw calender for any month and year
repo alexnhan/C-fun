@@ -1,0 +1,170 @@
+#include <iostream>
+#include <cmath>
+#include <string>
+#include <iomanip>
+using namespace std;
+
+bool leap_year(int year)
+{
+	if (year % 400 == 0)
+	{
+		return true;
+	}
+	else if (year % 4 == 0 && year % 100 != 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+int numberOfDaysInMonth(int month, int year)
+{
+	int num;
+	switch (month)
+	{
+	case 1:
+	case 3:
+	case 5:
+	case 7:
+	case 8:
+	case 10:
+	case 12:
+		num = 31;
+		break;
+	case 2:
+		if (leap_year(year))
+			num = 29;
+		else
+			num = 28;
+		break;
+	case 4:
+	case 6:
+	case 9:
+	case 11:
+		num = 30;
+		break;
+	}
+	return num;
+}
+
+int function(int day, int month, int year)
+{
+	int days_elapsed;
+	int g, f;
+	if (month == 1 || month == 2)
+	{
+		g = year - 1;
+		f = month + 13;
+	}
+	else
+	{
+		g = year;
+		f = month + 1;
+	}
+	days_elapsed = floor((365.25*g)) + floor((30.6001*f)) + day - 621049;
+	string dayName;
+	switch (days_elapsed % 7)
+	{
+	case 0:
+		dayName = "Sunday";
+		break;
+	case 1:
+		dayName = "Monday";
+		break;
+	case 2:
+		dayName = "Tuesday";
+		break;
+	case 3:
+		dayName = "Wednesday";
+		break;
+	case 4:
+		dayName = "Thursday";
+		break;
+	case 5:
+		dayName = "Friday";
+		break;
+	case 6:
+		dayName = "Saturday";
+		break;
+	}
+
+	//cout << "The week day for this day is: " << dayName;
+
+	//cin >> days_elapsed;
+	return days_elapsed % 7;
+
+}
+
+void drawCalender(int month, int year)
+{
+	string monthS;
+	if (month == 1)
+		monthS = "January";
+	else if (month == 2)
+		monthS = "February";
+	else if (month == 3)
+		monthS = "March";
+	else if (month == 4)
+		monthS = "April";
+	else if (month == 5)
+		monthS = "May";
+	else if (month == 6)
+		monthS = "June";
+	else if (month == 7)
+		monthS == "July";
+	else if (month == 8)
+		monthS = "August";
+	else if (month == 9)
+		monthS = "September";
+	else if (month == 10)
+		monthS = "October";
+	else if (month == 11)
+		monthS = "November";
+	else if (month == 12)
+		monthS = "December";
+
+	cout << endl << " " << monthS << " " << year << "   " << endl;
+	cout << "S  M  T  W  T  F  S" << endl;
+	int totalDays = numberOfDaysInMonth(month, year);
+	int firstDay = function(1, month, year);
+	int firstDayAux = firstDay;
+	int realDay = 0;
+	for (int i = 0, k = 1; i < totalDays + firstDayAux; i++)
+	{
+		if (firstDay == realDay)
+		{
+			cout << setw(3) << left << k << "";
+			k++;
+			realDay++;
+			firstDay++;
+		}
+		else
+		{
+			cout << "   ";
+			realDay++;
+		}
+
+		if (realDay % 7 == 0)
+			cout << endl;
+	}
+
+}
+
+int day = 0;
+int currentDay = 3;
+
+
+int main()
+{
+	cout << "Enter the day, month and year: ";
+	int day, month, year;
+	cin >> month;
+	cin >> year;
+	drawCalender(month, year);
+	cout << endl << endl;
+
+	return 0;
+}
