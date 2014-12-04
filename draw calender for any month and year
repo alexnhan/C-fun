@@ -1,4 +1,4 @@
-#include <iostream>
+#include <IOStream>
 #include <cmath>
 #include <string>
 #include <iomanip>
@@ -159,9 +159,10 @@ int currentDay = 3;
 
 int main()
 {
-	cout << "Enter the day, month and year: ";
-	int day, month, year;
+	int month, year;
+	cout << "Enter the month: ";
 	cin >> month;
+	cout << "Enter the year: ";
 	cin >> year;
 	drawCalender(month, year);
 	cout << endl << endl;
